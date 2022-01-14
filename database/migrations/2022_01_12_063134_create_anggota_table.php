@@ -15,8 +15,8 @@ class CreateAnggotaTable extends Migration
     {
         Schema::create('anggota', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('id_anggota');
-            $table->foreign('id_anggota')->references('id')->on('users')->onDelete('cascade');
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('nama');
             $table->string('alamat');
             $table->string('telp');

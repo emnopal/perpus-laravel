@@ -72,8 +72,8 @@
                                         </a>
                                     </td>
                                     <td>
-                                        <a href="/anggota/{{$content->id_anggota}}">
-                                            {{\App\Models\Anggota::findOrFail($content->id_anggota)->nama}}
+                                        <a href="/anggota/{{$content->anggota_id}}">
+                                            {{$content->anggota->nama}}
                                         </a>
                                     </td>
                                     <td>

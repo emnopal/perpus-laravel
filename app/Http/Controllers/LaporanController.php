@@ -167,7 +167,7 @@ class LaporanController extends Controller
             }
 
             if (Auth::user()->role == 'member') {
-                $q->where('id_anggota', Auth::user()->anggota->id);
+                $q->where('user_id', Auth::user()->anggota->id);
             }
 
             $datas = $q->get();
@@ -223,7 +223,7 @@ class LaporanController extends Controller
                     }
 
                     if (Auth::user()->role == 'member') {
-                        $q->where('id_anggota', Auth::user()->anggota->id);
+                        $q->where('anggota_id', Auth::user()->anggota->id);
                     }
 
                     $datas = $q->get();
@@ -240,7 +240,7 @@ class LaporanController extends Controller
                         $datasheet[$i] = array($i,
                             $data['kode_transaksi'],
                             $data->buku->judul,
-                            Anggota::findOrFail($data->id_anggota)->nama,
+                            $data->anggota->nama,
                             date('d/m/y', strtotime($data['tgl_pinjam'])),
                             date('d/m/y', strtotime($data['tgl_kembali'])),
                             $data['status'],

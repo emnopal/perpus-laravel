@@ -70,11 +70,11 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group{{ $errors->has('id_anggota') ? ' has-error' : '' }} "
+                                <div class="form-group{{ $errors->has('user_id') ? ' has-error' : '' }} "
                                      style="margin-bottom: 20px;">
-                                    <label for="id_anggota" class="col-md-4 control-label">User Login</label>
+                                    <label for="user_id" class="col-md-4 control-label">User Login</label>
                                     <div class="col-md-6">
-                                        <select class="form-control" name="id_anggota" required="">
+                                        <select class="form-control" name="user_id" required="">
                                             <option value="">(Cari User)</option>
                                             @foreach($users as $user)
                                                 <option value="{{$user->id}}">{{$user->name}}</option>

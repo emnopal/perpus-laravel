@@ -40,7 +40,7 @@
                 {{$data->buku->judul}}
             </td>
             <td>
-                {{\App\Models\Anggota::findOrFail($data->id_anggota)->nama}}
+                {{$data->peminjam->nama}}
             </td>
             <td>
                 {{date('d/m/y', strtotime($data->tgl_pinjam))}}

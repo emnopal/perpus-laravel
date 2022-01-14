@@ -13,15 +13,22 @@
 
         $(function () {
             $(".uploads").change(readURL)
-            $("#f").submit(function(){
+            $("#f").submit(function () {
                 // do ajax submit or just classic form submit
                 //  alert("fake subminting")
                 return false
             })
         })
 
+        var passwordCheck = function () {
+            if (document.getElementById('password').value.length < 6){
+                document.getElementById('submit').disabled = true;
+                document.getElementById('message').style.color = 'red';
+                document.getElementById('message').innerHTML = 'password must be at least 6 characters long';
+            }
+        }
 
-        var check = function() {
+        var check = function () {
             if (document.getElementById('password').value ===
                 document.getElementById('confirm_password').value) {
                 document.getElementById('submit').disabled = false;
@@ -53,7 +60,8 @@
                                 <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
                                     <label for="name" class="col-md-4 control-label">Name</label>
                                     <div class="col-md-6">
-                                        <input id="name" type="text" class="form-control" name="name" value="{{ old('name') }}" required>
+                                        <input id="name" type="text" class="form-control" name="name"
+                                               value="{{ old('name') }}" required>
                                         @if ($errors->has('name'))
                                             <span class="help-block">
                                         <strong>{{ $errors->first('name') }}</strong>
@@ -64,7 +72,8 @@
                                 <div class="form-group{{ $errors->has('username') ? ' has-error' : '' }}">
                                     <label for="username" class="col-md-4 control-label">Username</label>
                                     <div class="col-md-6">
-                                        <input id="username" type="text" class="form-control" name="username" value="{{ old('username') }}" required>
+                                        <input id="username" type="text" class="form-control" name="username"
+                                               value="{{ old('username') }}" required>
                                         @if ($errors->has('username'))
                                             <span class="help-block">
                                         <strong>{{ $errors->first('username') }}</strong>
@@ -76,7 +85,8 @@
                                 <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
                                     <label for="email" class="col-md-4 control-label">E-Mail Address</label>
                                     <div class="col-md-6">
-                                        <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}" required>
+                                        <input id="email" type="email" class="form-control" name="email"
+                                               value="{{ old('email') }}" required>
                                         @if ($errors->has('email'))
                                             <span class="help-block">
                                         <strong>{{ $errors->first('email') }}</strong>
@@ -88,8 +98,9 @@
                                 <div class="form-group">
                                     <label for="email" class="col-md-4 control-label">Gambar</label>
                                     <div class="col-md-6">
-                                        <img class="product" width="200" height="200" />
-                                        <input type="file" class="uploads form-control" style="margin-top: 20px;" name="avatar">
+                                        <img class="product" width="200" height="200"/>
+                                        <input type="file" class="uploads form-control" style="margin-top: 20px;"
+                                               name="avatar">
                                     </div>
                                 </div>
                                 <div class="form-group{{ $errors->has('role') ? ' has-error' : '' }}">
@@ -105,7 +116,8 @@
                                 <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
                                     <label for="password" class="col-md-4 control-label">Password</label>
                                     <div class="col-md-6">
-                                        <input id="password" type="password" class="form-control" onkeyup='check();' name="password" required>
+                                        <input id="password" type="password" class="form-control" onkeyup='check(); passwordCheck()'
+                                               name="password" required>
                                         @if ($errors->has('password'))
                                             <span class="help-block">
                                         <strong>{{ $errors->first('password') }}</strong>
@@ -114,9 +126,11 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="password-confirm" class="col-md-4 control-label">Confirm Password</label>
+                                    <label for="password-confirm" class="col-md-4 control-label">Confirm
+                                        Password</label>
                                     <div class="col-md-6">
-                                        <input id="confirm_password" type="password" onkeyup="check()" class="form-control" name="password_confirmation" required>
+                                        <input id="confirm_password" type="password" onkeyup="check()"
+                                               class="form-control" name="password_confirmation" required>
                                         <span id='message'></span>
                                     </div>
                                 </div>

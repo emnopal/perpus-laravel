@@ -7,7 +7,7 @@
         });
 
         $(document).on('click', '.pilih_anggota', function (e) {
-            document.getElementById("id_anggota").value = $(this).attr('data-id_anggota');
+            document.getElementById("anggota_id").value = $(this).attr('data-anggota_id');
             document.getElementById("anggota_nama").value = $(this).attr('data-anggota_nama');
             $('#myModal2').modal('hide');
         });
@@ -100,40 +100,40 @@
 
 
                                 @if(Auth::user()->role == 'admin')
-                                    <div class="form-group{{ $errors->has('id_anggota') ? ' has-error' : '' }}">
-                                        <label for="id_anggota" class="col-md-4 control-label">Anggota</label>
+                                    <div class="form-group{{ $errors->has('anggota_id') ? ' has-error' : '' }}">
+                                        <label for="anggota_id" class="col-md-4 control-label">Anggota</label>
                                         <div class="col-md-6">
                                             <div class="input-group">
                                                 <input id="anggota_nama" type="text" class="form-control" readonly=""
                                                        required>
-                                                <input id="id_anggota" type="hidden" name="id_anggota"
-                                                       value="{{ old('id_anggota') }}" required readonly="">
+                                                <input id="anggota_id" type="hidden" name="anggota_id"
+                                                       value="{{ old('anggota_id') }}" required readonly="">
                                                 <span class="input-group-btn">
                                     <button type="button" class="btn btn-warning btn-secondary" data-toggle="modal"
                                             data-target="#myModal2"><b>Cari Anggota</b> <span
                                             class="fa fa-search"></span></button>
                                 </span>
                                             </div>
-                                            @if ($errors->has('id_anggota'))
+                                            @if ($errors->has('anggota_id'))
                                                 <span class="help-block">
-                                        <strong>{{ $errors->first('id_anggota') }}</strong>
+                                        <strong>{{ $errors->first('anggota_id') }}</strong>
                                     </span>
                                             @endif
 
                                         </div>
                                     </div>
                                 @else
-                                    <div class="form-group{{ $errors->has('id_anggota') ? ' has-error' : '' }}">
-                                        <label for="id_anggota" class="col-md-4 control-label">Anggota</label>
+                                    <div class="form-group{{ $errors->has('anggota_id') ? ' has-error' : '' }}">
+                                        <label for="anggota_id" class="col-md-4 control-label">Anggota</label>
                                         <div class="col-md-6">
                                             <input id="anggota_nama" type="text" class="form-control" readonly=""
                                                    value="{{Auth::user()->anggota->nama}}" required>
-                                            <input id="id_anggota" type="hidden" name="id_anggota"
+                                            <input id="anggota_id" type="hidden" name="anggota_id"
                                                    value="{{ Auth::user()->anggota->id }}" required readonly="">
 
-                                            @if ($errors->has('id_anggota'))
+                                            @if ($errors->has('anggota_id'))
                                                 <span class="help-block">
-                                        <strong>{{ $errors->first('id_anggota') }}</strong>
+                                        <strong>{{ $errors->first('anggota_id') }}</strong>
                                     </span>
                                             @endif
 
@@ -250,7 +250,7 @@
                         </thead>
                         <tbody>
                         @foreach($anggota as $data)
-                            <tr class="pilih_anggota" data-id_anggota="<?php echo $data->id; ?>"
+                            <tr class="pilih_anggota" data-user_id="<?php echo $data->id; ?>"
                                 data-anggota_nama="<?php echo $data->nama; ?>">
                                 <td class="py-1">
                                     @if(!isset($data->user->avatar)||!$data->user->avatar)

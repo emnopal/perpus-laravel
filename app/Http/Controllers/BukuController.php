@@ -117,7 +117,7 @@ class BukuController extends Controller
     public function show(mixed $id): View|Factory|Application|RedirectResponse
     {
         try {
-            if (Auth::user()->role == 'member' && Auth::user()->id != $id) {
+            if (Auth::user()->role == 'member') {
                 Alert::info('Oopss..', 'Anda dilarang masuk ke area ini.');
                 return redirect()->to('/');
             }
@@ -257,28 +257,11 @@ class BukuController extends Controller
 
             if ($request->hasFile('importBuku')) {
                 $path = $request->file('importBuku')->getRealPath();
-
-//                $data = Excel::load($path, function ($reader) {})->get();
                 $data = Excel::import(import: new ImportBuku, filePath: $path, readerType: ExcelWriter::XLSX);
-
-//                if (!empty($a) && $a->count()) {
-//                    foreach ($a as $key => $value) {
-//                        $insert[] = [
-//                            'judul' => $value->judul,
-//                            'isbn' => $value->isbn,
-//                            'pengarang' => $value->pengarang,
-//                            'penerbit' => $value->penerbit,
-//                            'tahun_terbit' => $value->tahun_terbit,
-//                            'jumlah_buku' => $value->jumlah_buku,
-//                            'deskripsi' => $value->deskripsi,
-//                            'cover' => NULL
-//                        ];
-//
-//                        Buku::create($insert[$key]);
-//                    }
-//                };
             }
+
             Alert::success('Berhasil.', 'Data telah diimport!');
+
             return back();
         } catch (\Exception $e) {
             Alert::error('Oopss..', 'Terjadi kesalahan saat mengimport data.'.$e->getMessage());

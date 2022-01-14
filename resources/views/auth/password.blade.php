@@ -33,6 +33,14 @@
                 document.getElementById('message').innerHTML = 'not matching';
             }
         }
+
+        var passwordCheck = function () {
+            if (document.getElementById('new_password').value.length < 6){
+                document.getElementById('submit').disabled = true;
+                document.getElementById('message').style.color = 'red';
+                document.getElementById('message').innerHTML = 'password must be at least 6 characters long';
+            }
+        }
     </script>
 @stop
 
@@ -56,7 +64,8 @@
                                         New Password
                                     </label>
                                     <div class="col-md-6">
-                                        <input id="new_password" type="password" class="form-control" name="new_password" required>
+                                        <input id="new_password" type="password" class="form-control" onkeyup="passwordCheck()"
+                                               name="new_password" required>
                                         @if ($errors->has('new_password'))
                                             <span class="help-block">
                                         <strong>{{ $errors->first('new_password') }}</strong>

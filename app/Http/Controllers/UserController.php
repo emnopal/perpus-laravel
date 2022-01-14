@@ -106,7 +106,7 @@ class UserController extends Controller
             return redirect()->route('user.index');
 
         } catch (\Exception $e) {
-            Alert::error('Ups.. Gagal mengambil data', 'Terjadi kesalahan!' . $e->getMessage());
+            Alert::error('Ups..', 'Terjadi kesalahan!' . $e->getMessage());
             return back();
         }
     }

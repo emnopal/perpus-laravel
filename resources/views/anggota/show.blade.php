@@ -83,11 +83,11 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group{{ $errors->has('id_anggota') ? ' has-error' : '' }} "
+                                <div class="form-group{{ $errors->has('user_id') ? ' has-error' : '' }} "
                                      style="margin-bottom: 20px;">
-                                    <label for="id_anggota" class="col-md-4 control-label">User Login</label>
+                                    <label for="user_id" class="col-md-4 control-label">User Login</label>
                                     <div class="col-md-6">
-                                        <input id="id_anggota" type="text" class="form-control" name="id_anggota"
+                                        <input id="user_id" type="text" class="form-control" name="user_id"
                                                value="{{ $user->username }}" readonly="">
                                     </div>
                                 </div>

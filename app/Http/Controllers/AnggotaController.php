@@ -61,11 +61,11 @@ class AnggotaController extends Controller
             $users = User::WhereNotExists(function ($query) {
                 $query->select(DB::raw(1))
                     ->from('anggota')
-                    ->whereRaw('anggota.id_anggota = users.id');
+                    ->whereRaw('anggota.user_id = users.id');
             })->get();
             return view('anggota.create', compact('users'));
         } catch (\Exception $e) {
-            Alert::error('Ups.. Gagal mengambil data', 'Terjadi kesalahan!');
+            Alert::error('Ups..', 'Terjadi kesalahan!: '. $e->getMessage());
             return back();
         }
     }
@@ -120,7 +120,7 @@ class AnggotaController extends Controller
                 return redirect()->to('/');
             }
             $data = Anggota::findOrFail($id);
-            $user = User::findOrFail($data->id_anggota);
+            $user = User::findOrFail($data->user_id);
             return view('anggota.show', compact('data', 'user'));
         } catch (\Exception $e) {
             Alert::error('Ups.. Gagal mengambil data', 'Terjadi kesalahan!');

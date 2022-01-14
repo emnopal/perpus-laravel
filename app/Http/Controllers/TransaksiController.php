@@ -34,13 +34,14 @@ class TransaksiController extends Controller
     {
         try {
             if (Auth::user()->role == 'member') {
-                $data = Transaksi::where('id_anggota', Auth::user()->anggota->id)->get();
+                $id_anggota = Anggota::find(Auth::user()->id_anggota)->id;
+                $data = Transaksi::where('id_anggota', $id_anggota)->get();
             } else {
                 $data = Transaksi::get();
             }
             return view('transaksi.index', compact('data'));
         } catch (\Exception $e) {
-            Alert::error('Ups.. Gagal mengambil data', 'Terjadi kesalahan! '. $e->getMessage());
+            Alert::error('Ups.. Gagal mengambil data', 'Terjadi kesalahan! ' . $e->getMessage());
             return back();
         }
     }

@@ -37,13 +37,14 @@ class HomeController extends Controller
             $anggota = Anggota::get();
             $buku = Buku::get();
 
-            if (Auth::user()->role == 'member'){
-                $data = Transaksi::where('status', 'pinjam')
-                    ->where('id_anggota', Auth::user()->anggota->id)
-                    ->get();
-            } else {
-                $data = Transaksi::where('status', 'pinjam')->get();
-            }
+//            if (Auth::user()->role == 'member'){
+//                $data = Transaksi::where('status', 'pinjam')
+//                    ->where('user_id', Auth::user()->anggota->id)
+//                    ->get();
+//            } else {
+//                $data = Transaksi::where('status', 'pinjam')->get();
+//            }
+            $data = Transaksi::where('status', 'pinjam')->get();
             return view('home', compact('data', 'transaksi', 'anggota', 'buku'));
         } catch (\Exception $e) {
             Alert::info('Oopss..', 'Ada error yang terjadi: '. $e->getMessage());

@@ -46,12 +46,9 @@ Route::resource('anggota', AnggotaController::class);
 Route::resource('buku', BukuController::class);
 Route::get('/format/buku', BukuController::class.'@format')->name('format_buku');
 Route::post('/import/buku', BukuController::class.'@import')->name('import_buku');
-Route::get('/laporan/buku', LaporanController::class.'@buku')->name('laporan_buku');
-Route::get('/laporan/buku/pdf', LaporanController::class.'@bukuPdf')->name('laporan_buku_pdf');
-Route::get('/laporan/buku/excel', LaporanController::class.'@bukuExcel')->name('laporan_buku_excel');
 
 // Transaksi route
 Route::resource('transaksi', TransaksiController::class);
-Route::get('/laporan/transaksi', LaporanController::class.'@transaksi')->name('transaksi');
-Route::get('/laporan/transaksi/pdf', LaporanController::class.'@transaksiPdf')->name('transaksi_pdf');
-Route::get('/laporan/transaksi/excel', LaporanController::class.'@transaksiExcel')->name('transaksi_excel');
+
+// Laporan
+Route::get('/laporan/cetak', LaporanController::class.'@laporan')->name('laporan_cetak');

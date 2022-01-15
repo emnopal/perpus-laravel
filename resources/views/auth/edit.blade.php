@@ -20,7 +20,6 @@
             })
         })
 
-
         var check = function () {
             if (document.getElementById('password').value ===
                 document.getElementById('confirm_password').value) {
@@ -35,11 +34,8 @@
         }
     </script>
 @stop
-
 @extends('layouts.app')
-
 @section('content')
-
     <form action="{{ route('user.update', $data->id) }}" method="post" enctype="multipart/form-data">
         {{ csrf_field() }}
         {{ method_field('put') }}

@@ -1,13 +1,4 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <link rel="stylesheet" href="{{ asset('css/laporan.css') }}">>
-    <title>Laporan Data Transaksi</title>
-</head>
-<body>
-<h1 class="center">LAPORAN DATA TRANSAKSI</h1>
-<table id="pseudo-demo">
+<table>
     <thead>
     <tr>
         <th>
@@ -59,5 +50,3 @@
     @endforeach
     </tbody>
 </table>
-</body>
-</html>

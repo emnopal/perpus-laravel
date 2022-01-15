@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\TransaksiBuku;
+use App\Exports\TransaksiExcel;
 use App\Models\Anggota;
 use App\Models\Buku;
 use App\Models\Transaksi;
@@ -13,8 +15,10 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Excel as ExcelWriter;
 use Maatwebsite\Excel\Facades\Excel;
 use RealRashid\SweetAlert\Facades\Alert;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 // TODO: Fix the laporan controller
 
@@ -31,227 +35,72 @@ class LaporanController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
-     *
-     * @return View|Factory|RedirectResponse|Application
-     */
-    public function buku(): View|Factory|RedirectResponse|Application
-    {
-        try {
-            return view('laporan.buku');
-        } catch (\Exception $e) {
-            Alert::error('Terjadi Kesalahan!', $e->getMessage());
-            return redirect()->back();
-        }
-    }
-
-    /**
-     * Display a listing of the resource as PDF.
-     *
-     * @return View|Factory|RedirectResponse|Application
-     */
-    public function bukuPdf(): Response|RedirectResponse
-    {
-        try {
-            $datas = Buku::all();
-            $pdf = PDF::loadView('laporan.pdf_buku', compact('datas'));
-            return $pdf->download('laporan_buku_' . date('Y-m-d_H-i-s') . '.pdf');
-        } catch (\Exception $e) {
-            Alert::error('Oops..', 'Terjadi kesalahan saat mencetak laporan transaksi: ' . $e->getMessage());
-            return back();
-        }
-    }
-
-    /**
-     * Display a listing of the resource as Excel.
-     *
-     * @param Request $request
-     * @return RedirectResponse
-     */
-    public function bukuExcel(Request $request): RedirectResponse
-    {
-        try {
-            $nama = 'laporan_buku_' . date('Y-m-d_H-i-s');
-            Excel::create($nama, function ($excel) use ($request) {
-                $excel->sheet('Laporan Data Buku', function ($sheet) use ($request) {
-
-                    $sheet->mergeCells('A1:H1');
-
-                    // $sheet->setAllBorders('thin');
-                    $sheet->row(1, function ($row) {
-                        $row->setFontFamily('Calibri');
-                        $row->setFontSize(11);
-                        $row->setAlignment('center');
-                        $row->setFontWeight('bold');
-                    });
-
-                    $sheet->row(1, array('LAPORAN DATA BUKU'));
-
-                    $sheet->row(2, function ($row) {
-                        $row->setFontFamily('Calibri');
-                        $row->setFontSize(11);
-                        $row->setFontWeight('bold');
-                    });
-
-                    $datas = Buku::all();
-
-                    // $sheet->appendRow(array_keys($datas[0]));
-                    $sheet->row($sheet->getHighestRow(), function ($row) {
-                        $row->setFontWeight('bold');
-                    });
-
-                    $datasheet = array();
-                    $datasheet[0] = array("NO", "JUDUL", "ISBN", "PENGARANG", "PENERBIT", "TAHUN TERBIT", "JUMLAH BUKU");
-                    $i = 1;
-
-                    foreach ($datas as $data) {
-
-                        // $sheet->appendrow($data);
-                        $datasheet[$i] = array($i,
-                            $data['judul'],
-                            $data['isbn'],
-                            $data['pengarang'],
-                            $data['penerbit'],
-                            $data['tahun_terbit'],
-                            $data['jumlah_buku'],
-                        );
-
-                        $i++;
-                    }
-
-                    $sheet->fromArray($datasheet);
-                });
-
-            })->export('xls');
-            return back();
-        } catch (\Exception $e) {
-            Alert::error('Oops..', 'Terjadi kesalahan saat mencetak laporan transaksi: ' . $e->getMessage());
-            return back();
-        }
-    }
-
-    /**
-     * Display a listing of the transaksi.
-     *
-     * @return View|Factory|RedirectResponse|Application
-     */
-    public function transaksi(): View|Factory|Application|RedirectResponse
-    {
-        try {
-            return view('laporan.transaksi');
-        } catch (\Exception $e) {
-            Alert::error('Oops..', 'Terjadi kesalahan saat mencetak laporan transaksi: ' . $e->getMessage());
-            return back();
-        }
-    }
-
-
-    /**
      * Display a listing of the transaksi as pdf.
      *
      * @param Request $request
-     * @return Response|RedirectResponse
+     * @return BinaryFileResponse|Response|RedirectResponse|View|Factory|Application
      */
-    // Response|RedirectResponse
-    public function transaksiPdf(Request $request): Response|RedirectResponse
+    public function laporan(Request $request): BinaryFileResponse|Response|RedirectResponse|View|Factory|Application
     {
         try {
-            $q = Transaksi::query();
 
-            if ($request->get('status')) {
-                if ($request->get('status') == 'pinjam') {
-                    $q->where('status', 'pinjam');
+            if ($request->get('data') == 'transaksi') {
+
+                $nama = 'laporan_transaksi_' . date('Y-m-d_H-i-s');
+
+                $q = Transaksi::query();
+
+                if ($request->get('status')) {
+                    if ($request->get('status') == 'pinjam') {
+                        $nama .= '_pinjam';
+                        $q->where('status', 'pinjam');
+                    } else {
+                        $nama .= '_kembali';
+                        $q->where('status', 'kembali');
+                    }
+                }
+
+                if (Auth::user()->role == 'member') {
+                    $q->where('anggota_id', Auth::user()->anggota->id);
+                }
+
+                $datas = $q->get();
+
+                Alert::success('Berhasil', 'Laporan transaksi berhasil dicetak');
+
+                if ($request->get('format') == 'pdf') {
+                    $pdf = PDF::loadView('laporan.pdf_transaksi', compact('datas'));
+                    return $pdf->download($nama . '.pdf');
+                } else if ($request->get('format') == 'excel') {
+                    return Excel::download(new TransaksiExcel(compact('datas')), $nama . '.xlsx', ExcelWriter::XLSX);
                 } else {
-                    $q->where('status', 'kembali');
+                    return Excel::download(new TransaksiExcel(compact('datas')), $nama . '.csv', ExcelWriter::CSV);
+                }
+
+            } elseif ($request->get('data') == 'buku') {
+
+                $nama = 'laporan_buku_' . date('Y-m-d_H-i-s');
+
+                $datas = Buku::all();
+
+                if ($request->get('format') == 'pdf') {
+                    $pdf = PDF::loadView('laporan.pdf_buku', compact('datas'));
+                    return $pdf->download($nama . '.pdf');
+                } else if ($request->get('format') == 'excel') {
+                    return Excel::download(new TransaksiBuku(compact('datas')), $nama . '.xlsx', ExcelWriter::XLSX);
+                } else {
+                    return Excel::download(new TransaksiBuku(compact('datas')), $nama . '.csv', ExcelWriter::CSV);
+                }
+
+            } else {
+                try {
+                    return view('laporan.cetak');
+                } catch (\Exception $e) {
+                    Alert::error('Oops..', 'Terjadi kesalahan saat mencetak laporan transaksi: ' . $e->getMessage());
+                    return back();
                 }
             }
 
-            if (Auth::user()->role == 'member') {
-                $q->where('user_id', Auth::user()->anggota->id);
-            }
-
-            $datas = $q->get();
-
-//             return view('laporan.pdf_transaksi', compact('datas'));
-            $pdf = PDF::loadView('laporan.pdf_transaksi', compact('datas'));
-            return $pdf->download('laporan_transaksi_' . date('Y-m-d_H-i-s') . '.pdf');
-        } catch (\Exception $e) {
-            Alert::error('Oops..', 'Terjadi kesalahan saat mencetak laporan transaksi: ' . $e->getMessage());
-            return back();
-        }
-    }
-
-    /**
-     * Display a listing of the transaksi as excel.
-     *
-     * @param Request $request
-     * @return RedirectResponse
-     */
-    public function transaksiExcel(Request $request): RedirectResponse
-    {
-        try {
-            $nama = 'laporan_transaksi_' . date('Y-m-d_H-i-s');
-            Excel::create($nama, function ($excel) use ($request) {
-                $excel->sheet('Laporan Data Transaksi', function ($sheet) use ($request) {
-
-                    $sheet->mergeCells('A1:H1');
-
-                    // $sheet->setAllBorders('thin');
-                    $sheet->row(1, function ($row) {
-                        $row->setFontFamily('Calibri');
-                        $row->setFontSize(11);
-                        $row->setAlignment('center');
-                        $row->setFontWeight('bold');
-                    });
-
-                    $sheet->row(1, array('LAPORAN DATA TRANSAKSI'));
-
-                    $sheet->row(2, function ($row) {
-                        $row->setFontFamily('Calibri');
-                        $row->setFontSize(11);
-                        $row->setFontWeight('bold');
-                    });
-
-                    $q = Transaksi::query();
-
-                    if ($request->get('status')) {
-                        if ($request->get('status') == 'pinjam') {
-                            $q->where('status', 'pinjam');
-                        } else {
-                            $q->where('status', 'kembali');
-                        }
-                    }
-
-                    if (Auth::user()->role == 'member') {
-                        $q->where('anggota_id', Auth::user()->anggota->id);
-                    }
-
-                    $datas = $q->get();
-
-                    // $sheet->appendRow(array_keys($datas[0]));
-                    $sheet->row($sheet->getHighestRow(), function ($row) {
-                        $row->setFontWeight('bold');
-                    });
-                    $datasheet = array();
-                    $datasheet[0] = array("NO", "KODE TRANSAKSI", "BUKU", "PEMINJAM", "TGL PINJAM", "TGL KEMBALI", "STATUS", "KET");
-                    $i = 1;
-                    foreach ($datas as $data) {
-                        // $sheet->appendrow($data);
-                        $datasheet[$i] = array($i,
-                            $data['kode_transaksi'],
-                            $data->buku->judul,
-                            $data->anggota->nama,
-                            date('d/m/y', strtotime($data['tgl_pinjam'])),
-                            date('d/m/y', strtotime($data['tgl_kembali'])),
-                            $data['status'],
-                            $data['ket']
-                        );
-                        $i++;
-                    }
-                    $sheet->fromArray($datasheet);
-                });
-            })->export('xls');
-            return back();
         } catch (\Exception $e) {
             Alert::error('Oops..', 'Terjadi kesalahan saat mencetak laporan transaksi: ' . $e->getMessage());
             return back();

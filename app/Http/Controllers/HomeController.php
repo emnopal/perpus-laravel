@@ -31,23 +31,22 @@ class HomeController extends Controller
      */
     public function index(): Factory|View|Application|RedirectResponse
     {
-        try
-        {
+        try {
             $transaksi = Transaksi::get();
             $anggota = Anggota::get();
             $buku = Buku::get();
 
-//            if (Auth::user()->role == 'member'){
-//                $data = Transaksi::where('status', 'pinjam')
-//                    ->where('user_id', Auth::user()->anggota->id)
-//                    ->get();
-//            } else {
-//                $data = Transaksi::where('status', 'pinjam')->get();
-//            }
-            $data = Transaksi::where('status', 'pinjam')->get();
+            if (Auth::user()->role == 'member') {
+                $data = Transaksi::where('status', 'pinjam')
+                    ->where('anggota_id', Auth::user()->anggota->id)
+                    ->get();
+            } else {
+                $data = Transaksi::where('status', 'pinjam')->get();
+            }
+
             return view('home', compact('data', 'transaksi', 'anggota', 'buku'));
         } catch (\Exception $e) {
-            Alert::info('Oopss..', 'Ada error yang terjadi: '. $e->getMessage());
+            Alert::info('Oopss..', 'Ada error yang terjadi: ' . $e->getMessage());
             return back();
         }
     }

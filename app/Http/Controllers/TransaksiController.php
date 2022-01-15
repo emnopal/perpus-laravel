@@ -34,8 +34,7 @@ class TransaksiController extends Controller
     {
         try {
             if (Auth::user()->role == 'member') {
-                $id_anggota = Anggota::find(Auth::user()->id_anggota)->id;
-                $data = Transaksi::where('id_anggota', $id_anggota)->get();
+                $data = Transaksi::where('anggota_id', Auth::user()->anggota->id)->get();
             } else {
                 $data = Transaksi::get();
             }

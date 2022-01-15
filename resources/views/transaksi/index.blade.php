@@ -122,7 +122,7 @@
                                                 </div>
                                             </div>
                                         @else
-                                            @if($data->status == 'pinjam')
+                                            @if($content->status == 'pinjam')
                                                 <form action="{{ route('transaksi.update', $content->id) }}"
                                                       method="post" enctype="multipart/form-data">
                                                     {{ csrf_field() }}

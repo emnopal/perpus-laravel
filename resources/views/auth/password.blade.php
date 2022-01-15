@@ -102,7 +102,11 @@
                                     Update
                                 </button>
                                 <a href="{{route('user.edit', $data->id)}}" class="btn btn-light pull-right">Back</a>
-                                <a href="{{route('user.index')}}" class="btn btn-light pull-right">User List</a>
+                                @if($data->role == 'member')
+                                    <a class="btn btn-light pull-right" readonly="">User List</a>
+                                @else
+                                    <a href="{{route('user.index')}}" class="btn btn-light pull-right">User List</a>
+                                @endif
                             </div>
                         </div>
                     </div>

@@ -40,7 +40,6 @@ class BukuController extends Controller
     {
         try {
             if (Auth::user()->role == 'member') {
-                Alert::info('Oopss..', 'Anda dilarang masuk ke area ini.');
                 return redirect()->to('/');
             }
             $data = Buku::get();
@@ -60,7 +59,6 @@ class BukuController extends Controller
     {
         try {
             if (Auth::user()->role == 'member') {
-                Alert::info('Oopss..', 'Anda dilarang masuk ke area ini.');
                 return redirect()->to('/');
             }
             return view('buku.create');
@@ -118,7 +116,6 @@ class BukuController extends Controller
     {
         try {
             if (Auth::user()->role == 'member') {
-                Alert::info('Oopss..', 'Anda dilarang masuk ke area ini.');
                 return redirect()->to('/');
             }
             $data = Buku::findOrFail($id);
@@ -139,7 +136,6 @@ class BukuController extends Controller
     {
         try {
             if (Auth::user()->role == 'member') {
-                Alert::info('Oopss..', 'Anda dilarang masuk ke area ini.');
                 return redirect()->to('/');
             }
             $data = Buku::findOrFail($id);

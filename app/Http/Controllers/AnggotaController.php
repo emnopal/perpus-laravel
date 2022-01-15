@@ -35,7 +35,6 @@ class AnggotaController extends Controller
     {
         try {
             if (Auth::user()->role == 'member') {
-                Alert::info('Oopss..', 'Anda dilarang masuk ke area ini.');
                 return redirect()->to('/');
             }
             $data = Anggota::get();
@@ -55,7 +54,6 @@ class AnggotaController extends Controller
     {
         try {
             if (Auth::user()->role == 'member') {
-                Alert::info('Oopss..', 'Anda dilarang masuk ke area ini.');
                 return redirect()->to('/');
             }
             $users = User::WhereNotExists(function ($query) {
@@ -116,7 +114,6 @@ class AnggotaController extends Controller
     {
         try {
             if (Auth::user()->role == 'member' && Auth::user()->id != $id) {
-                Alert::info('Oopss..', 'Anda dilarang masuk ke area ini.');
                 return redirect()->to('/');
             }
             $data = Anggota::findOrFail($id);
@@ -138,7 +135,6 @@ class AnggotaController extends Controller
     {
         try {
             if (Auth::user()->role == 'member' && Auth::user()->id != $id) {
-                Alert::info('Oopss..', 'Anda dilarang masuk ke area ini.');
                 return redirect()->to('/');
             }
             $data = Anggota::findOrFail($id);

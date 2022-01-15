@@ -1,4 +1,4 @@
-<ul class="nav">
+<ul class="nav" style="position: fixed">
     <li class="nav-item nav-profile">
         <div class="nav-link">
             <div class="user-wrapper">
@@ -10,7 +10,7 @@
                     @endif
                 </div>
                 <div class="text-wrapper">
-                    <p class="profile-name">{{Auth::user()->name}}</p>
+                    <p class="profile-name"><a href="user/{{ Auth::user()->id }}" style="text-decoration: none; color: #2d3748">{{Auth::user()->name}}</a></p>
                     <div>
                         <small class="designation text-muted"
                                style="text-transform: uppercase;letter-spacing: 1px;">{{ Auth::user()->role }}</small>

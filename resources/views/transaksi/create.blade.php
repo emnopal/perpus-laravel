@@ -94,7 +94,6 @@
                                         <strong>{{ $errors->first('buku_id') }}</strong>
                                     </span>
                                         @endif
-
                                     </div>
                                 </div>
 

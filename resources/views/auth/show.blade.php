@@ -93,20 +93,23 @@
                                          @if($data->avatar) src="{{ asset('images/user/'.$data->avatar) }}" @endif />
                                 </div>
                             </div>
-                            @if(Auth::user()->role == 'admin')
-                                <div class="form-group{{ $errors->has('role') ? ' has-error' : '' }}">
-                                    <label for="role" class="col-md-4 control-label">Role</label>
-                                    <div class="col-md-6">
-                                        <select class="form-control" name="role" required="" readonly>
-                                            <option value="admin" @if($data->role == 'admin') selected @endif>Admin
-                                            </option>
-                                            <option value="user" @if($data->role == 'member') selected @endif>User
-                                            </option>
-                                        </select>
-                                    </div>
+
+                            <div class="form-group{{ $errors->has('role') ? ' has-error' : '' }}">
+                                <label for="email" class="col-md-4 control-label">Role</label>
+                                <div class="col-md-6">
+                                    <input id="email" type="email" class="form-control" name="email"
+                                           value="{{ $data->role }}" required readonly>
+                                    @if ($errors->has('role'))
+                                        <span class="help-block">
+                                        <strong>{{ $errors->first('role') }}</strong>
+                                    </span>
+                                    @endif
                                 </div>
-                            @endif
+                            </div>
+
+                            <a href="/user/{{$data->id}}/edit" class="btn btn-success pull-left">Edit</a>
                             <a href="{{route('user.index')}}" class="btn btn-light pull-right">Back</a>
+
                         </div>
                     </div>
                 </div>
